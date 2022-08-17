@@ -158,6 +158,9 @@ class Store(object):
             else:
                 if endTime - startTime > magic_threshold:
                     startTime = endTime - magic_threshold
+       
+        if endTime - startTime > magic_threshold:
+            log.info("large timespan detected, patterns: %s, startTime %s, endTime: %s " % (str(patterns), startTime, endTime))
 
         patterns = sorted(set(patterns))
 
@@ -166,9 +169,6 @@ class Store(object):
 
         log.debug(
             'graphite.storage.Store.fetch :: Starting fetch on all backends')
-
-        if endTime - startTime > magic_threshold:
-            log.info("patterns: %s, startTime %fs, endTime: %fs " % (str(patterns), startTime, endTime))
 
         jobs = []
         tag_patterns = None
