@@ -14,6 +14,7 @@ limitations under the License."""
 
 import imp
 import io
+import os
 import json as _json
 import socket
 import time
@@ -74,6 +75,18 @@ def timebounds(requestContext):
   startTime = int(epoch(requestContext['startTime']))
   endTime = int(epoch(requestContext['endTime']))
   now = int(epoch(requestContext['now']))
+  
+  max_timespan = 2592000 # one week in seconds
+  requested_timespan = endTime - startTime
+  if os.path.isfile('/tmp/enable_timespan_filter'):
+      if endTime is None and startTime is None:
+          startTime = int(time.time()) - max_timespan
+      elif endTime is None and startTime is not None:
+          if int(time.time()) - startTime > max_timespan:
+              startTime = int(time.time()) - max_timespan
+      else:
+          if requested_timespan > max_timespan:
+              startTime = endTime - max_timespan
 
   return (startTime, endTime, now)
 

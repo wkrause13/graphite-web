@@ -147,21 +147,6 @@ class Store(object):
 
     def fetch(self, patterns, startTime, endTime, now, requestContext):
         # deduplicate patterns
-        # deduplicate patterns
-        magic_threshold = 60 * 60 * 24 * 30
-        if os.path.isfile('/tmp/enable_timespan_filter'):
-            if endTime is None and startTime is None:
-                startTime = int(time.time()) - magic_threshold
-            elif endTime is None and startTime is not None:
-                if int(time.time()) - startTime > magic_threshold:
-                    startTime = int(time.time()) - magic_threshold
-            else:
-                if endTime - startTime > magic_threshold:
-                    startTime = endTime - magic_threshold
-       
-        if endTime - startTime > magic_threshold:
-            log.info("large timespan detected, patterns: %s, startTime %s, endTime: %s " % (str(patterns), startTime, endTime))
-
         patterns = sorted(set(patterns))
 
         if not patterns:
